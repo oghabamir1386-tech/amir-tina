@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دنیای امیر و تینا 💗</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma;background:linear-gradient(135deg,#fff7fb,#ffe1ed);color:#63394d}
+header{text-align:center;padding:35px 15px;background:#ffeaf2}
+h1,h2{color:#bd5680}
+main{max-width:850px;margin:20px auto;padding:12px}
+.card{background:white;border:1px solid #f3c6d8;border-radius:22px;padding:20px;margin:16px 0;box-shadow:0 5px 18px #bd568015}
+button{background:#bd5680;color:white;border:0;border-radius:13px;padding:12px 18px;font-size:15px;cursor:pointer;margin:5px}
+.secondary{background:#f8dce8;color:#793e59}
+.result{background:#fff2f7;border-radius:14px;padding:15px;margin:12px 0;line-height:2;min-height:55px}
+textarea{width:100%;height:110px;border:1px solid #e9b8cb;border-radius:12px;padding:12px;font:inherit}
+.small{font-size:12px;line-height:2;color:#987487}
+.saved{background:#fff2f7;padding:12px;margin:10px 0;border-radius:12px}
+</style>
+</head>
+<body>
+<header>
+<h1>💗 دنیای شیطونی امیر و تینا 💗</h1>
+<p>یه گوشه کوچولو برای خنده‌ها و سورپرایزهای دونفره‌مون ✨</p>
+</header>
+<main>
+<section class="card">
+<h2>🎁 جعبه سورپرایز</h2>
+<div class="result" id="surprise">یه سورپرایز منتظرته!</div>
+<button onclick="pick('surprise',surprises)">باز کردن سورپرایز</button>
+</section>
+
+<section class="card">
+<h2>😼 امیر الان چی می‌خواد بگه؟</h2>
+<div class="result" id="amir">بزن ببینیم!</div>
+<button onclick="pick('amir',amirs)">بفهمیم!</button>
+</section>
+
+<section class="card">
+<h2>🌷 یادداشت‌های کوچولو</h2>
+<textarea id="note" placeholder="یه چیزی بنویس..."></textarea>
+<button onclick="saveNote()">ذخیره روی همین دستگاه</button>
+<button class="secondary" onclick="shareNote()">فرستادن یادداشت</button>
+<p class="small">یادداشت ذخیره‌شده فقط روی همین دستگاه قابل دیدنه. برای فرستادنش از دکمه اشتراک‌گذاری استفاده کن.</p>
+<div id="saved"></div>
+</section>
+
+<section class="card">
+<h2>🎲 چالش دونفره</h2>
+<div class="result" id="challenge">آماده‌این؟</div>
+<button onclick="pick('challenge',challenges)">یه چالش بده</button>
+</section>
+
+<section class="card">
+<h2>💌 یه تعریف قشنگ</h2>
+<div class="result" id="compliment">یه جمله قشنگ برات داریم!</div>
+<button onclick="pick('compliment',compliments)">یکی دیگه!</button>
+</section>
+</main>
+
+<script>
+const surprises=[
+"امروز یه لبخند ازت طلب داریم 😁",
+"یکی این گوشه دنیا به فکرت هست 💗",
+"امروز رو با یه اتفاق کوچولوی خوب قشنگ کن 🍓",
+"تو لایق کلی اتفاق قشنگی ✨"
+];
+const amirs=[
+"خانوم کوچولو، میزان ناناسی شما از حد مجاز بیشتره 😌",
+"یکی اینجا دلش می‌خواد کلی باهات حرف بزنه!",
+"اخطار! دلتنگی در این سمت زیاد شده 🚨",
+"اومدم ببینم لبخندت سر جاشه؟"
+];
+const challenges=[
+"یه خاطره بامزه از هم تعریف کنین.",
+"سه تا چیز که امروز خوشحالتون کرده بگین.",
+"برای هم یه اسم رمز خنده‌دار انتخاب کنین.",
+"یه آهنگ برای هم پیشنهاد بدین.",
+"از حال امروزتون یه نقاشی کوچولو بکشین."
+];
+const compliments=[
+"بودنت می‌تونه یه روز معمولی رو قشنگ‌تر کنه 🌸",
+"لبخندت خیلی دوست‌داشتنیه!",
+"تو با جزئیات کوچولوی خودت خاصی 💗",
+"امیدوارم امروز بهت خوش بگذره!"
+];
+function pick(id,arr){
+document.getElementById(id).textContent=arr[Math.floor(Math.random()*arr.length)];
+}
+function getNotes(){
+try{return JSON.parse(localStorage.getItem("notes")||"[]")}catch(e){return []}
+}
+function saveNote(){
+let v=document.getElementById("note").value.trim();
+if(!v){alert("اول یه چیزی بنویس 🌷");return}
+let a=getNotes();a.unshift(v);
+localStorage.setItem("notes",JSON.stringify(a));
+document.getElementById("note").value="";
+render();
+}
+function render(){
+let el=document.getElementById("saved");el.innerHTML="";
+getNotes().forEach((n,i)=>{
+let d=document.createElement("div");d.className="saved";
+let p=document.createElement("p");p.textContent=n;
+let b=document.createElement("button");b.className="secondary";b.textContent="حذف";
+b.onclick=()=>{let a=getNotes();a.splice(i,1);localStorage.setItem("notes",JSON.stringify(a));render()};
+d.append(p,b);el.append(d);
+});
+}
+async function shareNote(){
+let v=document.getElementById("note").value.trim();
+if(!v){alert("اول یادداشتت رو بنویس 💌");return}
+try{
+if(navigator.share)await navigator.share({title:"یادداشت امیر و تینا",text:v});
+else{await navigator.clipboard.writeText(v);alert("متن کپی شد؛ براش بفرست 💗")}
+}catch(e){}
+}
+render();
+</script>
+</body>
+</html>
